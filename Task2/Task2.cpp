@@ -7,7 +7,6 @@
 //
 
 #include <iostream>;
-#include <algorithm>;
 
 char* coolest_addition( char a[], char b[]) {
     int a_len = strlen(a);
@@ -22,12 +21,12 @@ char* coolest_addition( char a[], char b[]) {
         return result;
     }
 
-    char* result = new char[res_len];
+    char* result = new char[res_len + 1];
 
-    for (int i = 0; i < res_len - 1; i++) {
+    for (int i = 0; i < res_len; i++) {
         result[i] = '0';
     }
-    result[res_len - 1] = '\0';
+    result[res_len] = '\0';
 
     char a_n, b_n, sum;
     char carry_over = 0;
@@ -40,9 +39,8 @@ char* coolest_addition( char a[], char b[]) {
         result[res_len - i - 1] = sum % 10 + '0';
         carry_over = sum / 10;
     }
-    std::cout << result << "\n";
-
-    if ((res_len > 1) && (result[0] == '0')) {
+    
+    if ((res_len - 1 > 1) && (result[0] == '0')) {
         int zero_offset = 0;
         for (int i = 0; i < res_len; i++) {
             if (result[i] == '0') {
@@ -52,12 +50,14 @@ char* coolest_addition( char a[], char b[]) {
                 break;
             }
         }
+
         char* tmp = new char[res_len - zero_offset + 1];
-        memcpy(tmp, result + zero_offset, (res_len - zero_offset) * 4);
-        tmp[res_len - zero_offset] = '\0';
+        memcpy(tmp, result + zero_offset, (res_len - zero_offset - 1) * 4);
+        tmp[res_len - zero_offset + 1] = '\0';
         delete[] result;
         result = tmp;
     }
+
     return result;
 }
 
@@ -67,7 +67,7 @@ char* multiplication(char a[], char b[]) {
     int a_len = strlen(a);
     int b_len = strlen(b);
 
-    int res_len = a_len * b_len + 2;
+    int res_len = a_len * b_len + 1;
 
 
     if ((a_len == 1 && a[0] == '0') or (b[0] == '0' && b_len == 1)) {
@@ -77,11 +77,11 @@ char* multiplication(char a[], char b[]) {
         return result;
     }
 
-    char* result = new char[res_len];
-    for (int i = 0; i < res_len-1; i++) {
+    char* result = new char[res_len + 1];
+    for (int i = 0; i < res_len; i++) {
         result[i] = '0';
     }
-    result[res_len - 1] = '\0';
+    result[res_len] = '\0';
 
     char a_n, b_n, res_n, sum;
     char carry_over = 0;
@@ -94,11 +94,11 @@ char* multiplication(char a[], char b[]) {
         //multiply number in a by b
         for (int j = 0; j < a_len + 1; j++) {
             a_n = j < a_len ? a[a_len - j - 1] - '0' : 0;
-            res_n = result[res_len - i - j - 2] - '0';
+            res_n = result[res_len - i - j - 1] - '0';
 
             //and add it to result
             sum = res_n + a_n * b_n + carry_over;
-            result[res_len - i - j - 2] = sum % 10 + '0';
+            result[res_len - i - j - 1] = sum % 10 + '0';
             carry_over = sum / 10;
         }
     }
@@ -107,7 +107,7 @@ char* multiplication(char a[], char b[]) {
     //Remove zeroes from the beggining 
     if ((res_len > 1) && (result[0]=='0')) {
         int zero_offset= 0;
-        for (int i = 0; i < res_len -1; i++) {
+        for (int i = 0; i < res_len; i++) {
             if (result[i] == '0') {
                 zero_offset += 1;
             }
@@ -116,11 +116,12 @@ char* multiplication(char a[], char b[]) {
             }
         }
         char* tmp = new char[res_len-zero_offset + 1];
-        memcpy(tmp,result+zero_offset,(res_len - zero_offset - 1)*4);
+        memcpy(tmp,result + zero_offset,(res_len - zero_offset)*4);
         tmp[res_len - zero_offset] = '\0';
         delete[] result;
         result = tmp;
     }
+
     return result;
 }
 
